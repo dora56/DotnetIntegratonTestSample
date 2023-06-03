@@ -24,7 +24,7 @@ This sample demonstrates how to use the dotnet integration test
     "FUNCTIONS_WORKER_RUNTIME": "dotnet"
   },
   "ConnectionStrings": {
-    "DatabaseConnection": "Server=(localdb)\\mssqllocaldb;Database=DotNetIntegrationTestSample;Trusted_Connection=True;MultipleActiveResultSets=true",
+    "DatabaseConnection": "Server=localhost;Database=functest;User=sa;Password=P@ssw0rd;Trusted_Connection=False;",
     "StorageConnection": "UseDevelopmentStorage=true"
   }
 }
