@@ -1,9 +1,4 @@
-using System.Data.Common;
-using System.Data.SqlTypes;
-using Core.Entities;
 using FunctionApp.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace FunctionApp.Test.Unit;
 
@@ -57,7 +52,7 @@ public class UserTriggerTest
         // Arrange
         _userRepositoryMock
             .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((User) null);
+            .ReturnsAsync(default(User));
         
         var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object);
         

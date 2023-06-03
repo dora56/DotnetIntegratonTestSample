@@ -21,6 +21,7 @@ public class UserTriggerTest : IClassFixture<TestStartup>, IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async void Success_CreateUser()
     {
         // Arrange
@@ -36,6 +37,7 @@ public class UserTriggerTest : IClassFixture<TestStartup>, IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async void Success_UpdateUser()
     {
         // Arrange
