@@ -1,0 +1,58 @@
+name: Build Dotnet.
+
+on: 
+  - workflow_dispatch
+  - push
+
+env:
+  DOTNET_VERSION: '6.0.x'
+  NODE_VERSION: '18.16.0'
+  SOLUTION_PATH: './DotnetIntegratonTestSample.sln'
+  BUILD_CONFIGURATION: 'Release'
+  FUNCTION_APP_PATH: './src/FunctionApp/FunctionApp'
+  
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          SA_PASSWORD: P@ssw0rd
+          ACCEPT_EULA: 'Y'
+        ports:
+          - 1433:1433
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v3
+          
+      - name: Setup Node.js ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install Azurite
+        run: npm install -g azurite
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+        
+      - name: Build
+        run: dotnet build --no-restore --configuration ${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_PATH }}
+
+      - name: setup local.settings.json
+        run: cp ./src/FunctionApp/local.settings.json.template ./src/FunctionApp/local.settings.json
+      
+      - name: Unit test
+        run: dotnet test ${{ env.SOLUTION_PATH }} --filter "Category!=Integration"
+      
+      - name: Start Azurite
+        run: azurite --silent --location /tmp --debug /tmp/azurite.log --blobHost &
+                    
+      - name: Integration test
+        run: dotnet test ${{ env.SOLUTION_PATH }} --filter "Category=Integration"
