@@ -11,8 +11,8 @@ public class UserTrigger
         _logger = logger;
     }
     
-    [FunctionName("UserCreate")]
-    public async Task RunAsync(
+    [FunctionName(nameof(UserCreateRunQueueAsync))]
+    public async Task UserCreateRunQueueAsync(
         [QueueTrigger("functest-user-create")] UserQueueItem item)
     {
         var user = new User(item.Name);

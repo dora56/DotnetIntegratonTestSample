@@ -27,7 +27,7 @@ public class UserTriggerTest: IClassFixture<TestStartup>, IAsyncLifetime
         var item = new UserQueueItem("testuser");
         
         // Act
-        await _trigger.RunAsync(item);
+        await _trigger.UserCreateRunQueueAsync(item);
         _user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == item.Name);
         
         // Assert
