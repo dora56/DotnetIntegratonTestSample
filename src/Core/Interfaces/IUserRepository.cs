@@ -4,7 +4,7 @@ namespace Core.Interfaces;
 
 public interface IUserRepository
 {
-    public Task<User> GetByIdAsync(Guid id);
+    public Task<User?> GetByIdAsync(Guid id);
     
     public Task AddAsync(User user);
     

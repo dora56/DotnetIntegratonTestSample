@@ -1,3 +1,5 @@
+using System;
+
 [assembly: FunctionsStartup(typeof(FunctionApp.Startup))]
 
 namespace FunctionApp;
@@ -6,7 +8,12 @@ public class Startup: FunctionsStartup
 {
     public override void Configure(IFunctionsHostBuilder builder)
     {
-        var configuration = builder.GetContext().Configuration;
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Environment.CurrentDirectory)
+            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
+        
         builder.Services
             .AddHttpContextAccessor()
             .AddDatabaseService(configuration)

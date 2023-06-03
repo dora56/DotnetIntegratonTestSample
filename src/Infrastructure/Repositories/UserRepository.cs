@@ -9,29 +9,40 @@ public class UserRepository: IUserRepository
         _context = context;
     }
     
-    public async Task<User> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id)
     {
         return await _context.Users.FindAsync(id);
     }
 
     public async Task AddAsync(User user)
     {
+        if (user == null) throw new ArgumentNullException(nameof(user));
+
         await _context.Users.AddAsync(user);
 
-        await _context.SaveChangesAsync();
+        await SaveChangesAsync();
     }
 
     public async Task UpdateAsync(User user)
     {
+        if (user == null) throw new ArgumentNullException(nameof(user));
+        
         _context.Users.Update(user);
 
-        await _context.SaveChangesAsync();
+        await SaveChangesAsync();
     }
 
     public async Task DeleteAsync(User user)
     {
+        if (user == null) throw new ArgumentNullException(nameof(user));
+        
         _context.Users.Remove(user);
         
-        await _context.SaveChangesAsync();
+        await SaveChangesAsync();
+    }
+    
+    private async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }
