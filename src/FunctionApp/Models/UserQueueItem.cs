@@ -1,5 +1,13 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace FunctionApp.Models;
 
-public record UserQueueItem([property: JsonPropertyName("name")]string Name);
+public class UserQueueItem
+{
+    [JsonPropertyName("id")]
+    public string Id { get; init; }
+    
+    [JsonPropertyName("name")]
+    public string Name { get; init; }
+}
