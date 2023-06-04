@@ -22,17 +22,16 @@ jobs:
           ACCEPT_EULA: 'Y'
         ports:
           - 1433:1433
+      azurite:
+        image: mcr.microsoft.com/azure-storage/azurite
+        ports:
+          - 10000:10000
+          - 10001:10001
+          - 10002:10002
+        options: --restart=always
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v3
-          
-      - name: Setup Node.js ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      
-      - name: Install Azurite
-        run: npm install -g azurite
 
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
         uses: actions/setup-dotnet@v3
@@ -50,9 +49,6 @@ jobs:
       
       - name: Unit test
         run: dotnet test ${{ env.SOLUTION_PATH }} --filter "Category!=Integration"
-      
-      - name: Start Azurite
-        run: azurite --silent --location /tmp --debug /tmp/azurite.log --blobHost &
                     
       - name: Integration test
         run: dotnet test ${{ env.SOLUTION_PATH }} --filter "Category=Integration"
