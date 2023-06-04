@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using FunctionApp.Models;
 
 namespace FunctionApp.Test.Unit;
@@ -6,6 +7,7 @@ public class UserTriggerTest
 {
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
     private readonly Mock<ILogger<UserTrigger>> _loggerMock = new();
+    private readonly Mock<BlobServiceClient> _blobServiceClientMock = new();
     
     [Fact]
     public async Task Success_CreateUserRunQueueAsync()
@@ -14,7 +16,7 @@ public class UserTriggerTest
         _userRepositoryMock
             .Setup(x => x.AddAsync(It.IsAny<User>()))
             .Returns(Task.CompletedTask);
-        var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object);
+        var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object, _blobServiceClientMock.Object);
 
         // Act
         await sut.CreateUserRunQueueAsync(new UserQueueItem {Name = "testUser"});
@@ -36,7 +38,7 @@ public class UserTriggerTest
             .Setup(x => x.UpdateAsync(It.IsAny<User>()))
             .Returns(Task.CompletedTask);
         
-        var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object);
+        var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object, _blobServiceClientMock.Object);
         
         // Act
         await sut.UpdateUserRunQueueAsync(new UserQueueItem {Id = testUser.Id.ToString(), Name = "testUser2"});
@@ -54,7 +56,7 @@ public class UserTriggerTest
             .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync(default(User));
         
-        var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object);
+        var sut = new UserTrigger(_userRepositoryMock.Object, _loggerMock.Object, _blobServiceClientMock.Object);
         
         // Act
         await sut.UpdateUserRunQueueAsync(new UserQueueItem {Id = Guid.NewGuid().ToString(), Name = "testUser2"});
