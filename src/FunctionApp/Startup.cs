@@ -1,5 +1,3 @@
-using System;
-
 [assembly: FunctionsStartup(typeof(FunctionApp.Startup))]
 
 namespace FunctionApp;
@@ -52,6 +50,7 @@ public static class StartupExtension
         services.AddAzureClients(builder =>
         {
             builder.AddQueueServiceClient(connectionString);
+            builder.AddBlobServiceClient(connectionString);
         });
 
         return services;

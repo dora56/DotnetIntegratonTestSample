@@ -1,6 +1,10 @@
 // Global using directives
 
+global using System;
+global using System.IO;
+global using System.Text.Json;
 global using System.Threading.Tasks;
+global using Azure.Storage.Blobs;
 global using Core.Entities;
 global using Core.Interfaces;
 global using FunctionApp.Models;
